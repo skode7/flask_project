@@ -2,35 +2,41 @@ from flask import Flask
 from flask_cors import CORS
 from ollama import ChatResponse
 from ollama import chat
-from code_explainer import prompt_to_llm
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "asdasd"
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 
 # Endpoint käyttäjän kysymystä varten
-@app.route("/ask/<string:prompt>", methods=["POST"])
-def prompt_to_llm(prompt: str):
-    try:
-        response: ChatResponse = chat(
-            model="jobautomation/OpenEuroLLM-Finnish",
-            messages= [
-                {
-                    "role": "system",
-                    "content": (
-                        f"Toimit koodausmentorina sovelluksessa, jossa käyttäjät esittävät ohjelmointiin liittyviä kysymyksiä. "
-                        f"Tavoitteesi on auttaa käyttäjiä oppimaan, ei vain ratkaisemaan ongelmia. "
-                        f"Älä anna suoraa ratkaisua tai kirjoita valmista koodia ellei käyttäjä nimenomaisesti pyydä sitä. "
-                        f"Sen sijaan tue käyttäjän ajattelua kysymällä tarkentavia kysymyksiä, esittämällä vihjeitä ja avaamalla ongelman taustoja. "
-                        f"Selitä tarvittaessa käsitteitä ja ehdota, miten käyttäjä voisi lähestyä ongelmaa. "
-                        f"Kannusta käyttäjää tutkimaan ja kokeilemaan ratkaisuja itse, sekä tarjoa tarvittaessa lisätukea ja rohkaisua. Ole aina ystävällinen ja kärsivällinen"
-                    )
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ])
-        return response["message"]["content"]
 
-    except Exception as e:
-        return {"error": e}
+@app.route("/ask/<prompt>", methods=["GET", "POST"])
+def ask(prompt: str):
+    stream = chat(
+        model='gemma3:4b',
+        messages=[{'role': 'user', 'content': prompt}],
+        stream=True,
+    )
+    in_thinking = False
+    content = ""
+    thinking = ""
+    for chunk in stream:
+        if chunk.message.thinking:
+            if not in_thinking:
+                in_thinking = True
+                print(f"Thinking:\n", end="", flush=True)
+            print(chunk.message.thinking, end="", flush=True)
+            thinking += chunk.message.thinking
+
+        elif chunk.message.content:
+            if in_thinking:
+                in_thinking = False
+                print("\n\nAnswer:\n", end="", flush=True)
+            print(chunk.message.content, end="", flush=True)
+            content += chunk.message.content
+
+
+if __name__ == "__main__":
+    socketio.run(app, debug=True, host='127.0.0.1', port=5000, allow_unsafe_werkzeug=True)
