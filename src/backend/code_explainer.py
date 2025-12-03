@@ -1,10 +1,8 @@
 from ollama import chat
 from ollama import ChatResponse
-from flask import Flask
 
 
 def prompt_to_llm(prompt: str) -> str:
-
     response: ChatResponse = chat(
         model="jobautomation/OpenEuroLLM-Finnish",
         messages= [
