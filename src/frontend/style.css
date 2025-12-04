@@ -14,20 +14,41 @@ body {
 }
 
 #chatDiv {
-    position: relative;
     margin-left: auto;
     margin-right: auto;
+    display: grid;
     background-color: #EFE9E3;
-    height: 70%;
-    width: 60%;
+    height: 80vh;
+    width: 120vh;
     border-radius: 4px;
+    justify-content: center;
+    overflow: auto;
+
 }
 #inputDiv {
-    position: absolute;
-    bottom: 0px;
+    position: relative;
+    margin-top: auto;
 }
 #form {
+    position:relative;
+    display: inline;
 
 }
 #userInput{
+
+
+}
+textarea {
+    resize: none;
+    border-radius: 40px;
+    color: black;
+    background-color: #EFE9E3;
+    width: min-content;
+    padding: 5px;
+
+}
+#submit-btn{
+    border-radius: 4px;
+    position: relative;
+    bottom: 6px;
 }
