@@ -1,19 +1,18 @@
 from flask import Flask
 from flask_cors import CORS
-from ollama import ChatResponse
 from ollama import chat
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
+import asyncio
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "asdasd"
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 # Endpoint käyttäjän kysymystä varten
 
 @app.route("/ask/<prompt>", methods=["GET", "POST"])
-def ask(prompt: str):
+def ask_to_llm(prompt: str):
     stream = chat(
         model='gemma3:4b',
         messages=[{'role': 'user', 'content': prompt}],
@@ -39,4 +38,4 @@ def ask(prompt: str):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host='127.0.0.1', port=5000, allow_unsafe_werkzeug=True)
+    app.run(debug=True)

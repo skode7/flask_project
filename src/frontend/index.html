@@ -9,25 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-    <script type="text/javascript" charset="utf-8">
-            var socket = io();
-            socket.on('connect', function() {
-                socket.emit('my event', {data: 'I\'m connected!'});
-            });
-<   </script>
 </head>
 <body>
     <header>
-        <h1 class="header">Ask help for programming!</h1>
+        <h1 class="header">Mentor AI</h1>
     </header>
     <div id="chatDiv" class="chat">
         <div id="inputDiv" class="inputs">
-            <form id="form">
-                <label>
-                    <input id="userInput" name="input" type="text" placeholder="enter your question here">
-                </label>
-                <input name=submit type="button" value="ask">
-            </form>
+            <input id="userInput" name="input" type="text" placeholder="enter your question here">
+            <input id="btn" type="button" value="ask">
         </div>
     </div>
 </body>
