@@ -4,15 +4,25 @@ const span = document.createElement("span");
 const msgDiv = document.getElementById("messages")
 
 async function fetchData (input) {
-    const url = "http://127.0.0.1:5000/ask/" + input
-    const response = await fetch(url)
-    return await response.json()
+    try {
+        const url = "http://127.0.0.1:5000/ask/" + input
+        const response = await fetch(url)
+        return await response.json()
+    }
+    catch (error){
+        return {"error": error}
+    }
 }
 
 async function showMessage(message) {
-    span.textContent = message["reply"]
+    console.log(message)
+    if ("reply" in message) {
+        span.textContent = message["reply"]
+    }
+    else {
+        span.textContent = message["error"]
+    }
     msgDiv.append(span)
-
 }
 
 submitBtn.addEventListener("click", async (evt) => {
