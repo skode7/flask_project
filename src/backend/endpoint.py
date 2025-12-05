@@ -1,40 +1,34 @@
-from flask import Flask
-from flask_cors import CORS
+from flask import Flask, jsonify
+from flask_cors import cross_origin
 from ollama import chat
-from flask_socketio import SocketIO, emit, send
-import asyncio
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "asdasd"
-CORS(app)
-
 
 # Endpoint käyttäjän kysymystä varten
-
 @app.route("/ask/<prompt>", methods=["GET", "POST"])
-def ask_to_llm(prompt: str):
-    stream = chat(
-        model='gemma3:4b',
-        messages=[{'role': 'user', 'content': prompt}],
-        stream=True,
-    )
-    in_thinking = False
-    content = ""
-    thinking = ""
-    for chunk in stream:
-        if chunk.message.thinking:
-            if not in_thinking:
-                in_thinking = True
-                print(f"Thinking:\n", end="", flush=True)
-            print(chunk.message.thinking, end="", flush=True)
-            thinking += chunk.message.thinking
+@cross_origin()
+def ask(prompt: str):
+    try:
+        response = ask_to_llm(prompt)
+        return jsonify({"reply": response})
+    except Exception as e:
+        return {"error": e}
 
-        elif chunk.message.content:
-            if in_thinking:
-                in_thinking = False
-                print("\n\nAnswer:\n", end="", flush=True)
-            print(chunk.message.content, end="", flush=True)
-            content += chunk.message.content
+
+# Välitetään käyttäjän syöte localhost kielimallille ja palautetaan vastaus
+def ask_to_llm(prompt: str) -> str:
+    response = chat(
+        model='jobautomation/OpenEuroLLM-Finnish',
+        messages=[
+            {"role": "system", "content":(
+                f"Olet Mentor-AI: empaattinen, kannustava ja oppimista tukeva mentori."
+                f"Tehtävänäsi on ohjeistaa oikeaan suuntaan ja olla tukena, mutta ei antaa heti oikeita vastauksia."
+            )},
+
+            {'role': 'user', 'content': prompt}
+        ]
+    )
+    return response.message.content
 
 
 if __name__ == "__main__":
