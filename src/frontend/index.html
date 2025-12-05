@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content=
+        "width=device-width, initial-scale=1.0">
     <title>Code Helper</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="app.js" defer></script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,14 +17,15 @@
         <h1 class="header">Mentor AI</h1>
     </header>
     <div id="chatDiv" class="chat">
-        <div id="inputDiv" class="inputs">
+    <div id="messages">
+        <div class="=message"></div>
+    </div>
             <form id="form">
                 <label>
-                    <textarea name="message" rows="1" cols="40"></textarea>
+                    <textarea id="txtarea" name="message" rows="1" cols="40"></textarea>
                 </label>
                 <button id="submit-btn" type="button">Send</button>
             </form>
         </div>
-    </div>
 </body>
 </html>
