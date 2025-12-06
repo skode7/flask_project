@@ -1,8 +1,16 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import cross_origin
 from ollama import chat
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../frontend")
+
+@app.route("/")
+def index():
+    return send_from_directory("../frontend", "index.html")
+
+@app.route("/<path:path>")
+def static_files(path):
+    return send_from_directory("../frontend", path)
 
 # Endpoint käyttäjän kysymystä varten
 @app.route("/ask/<prompt>", methods=["GET", "POST"])
@@ -32,4 +40,4 @@ def ask_to_llm(prompt: str) -> str:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
