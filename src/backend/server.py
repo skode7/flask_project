@@ -8,12 +8,14 @@ app = Flask(__name__, static_folder="../frontend")
 def index():
     return send_from_directory("../frontend", "index.html")
 
+
 @app.route("/<path:path>")
 def static_files(path):
     return send_from_directory("../frontend", path)
 
+
 # Endpoint käyttäjän kysymystä varten
-@app.route("/ask/<prompt>", methods=["GET", "POST"])
+@app.route("/ask/<prompt>", methods=["GET"])
 @cross_origin()
 def ask(prompt: str):
     try:
@@ -29,7 +31,7 @@ def ask_to_llm(prompt: str) -> str:
         model='jobautomation/OpenEuroLLM-Finnish',
         messages=[
             {"role": "system", "content":(
-                f"Olet Mentor-AI: empaattinen, kannustava ja oppimista tukeva mentori."
+                f"Olet Mentori: empaattinen, kannustava ja oppimista tukeva mentori."
                 f"Tehtävänäsi on ohjeistaa oikeaan suuntaan ja olla tukena, mutta ei antaa heti oikeita vastauksia."
             )},
 
@@ -40,4 +42,4 @@ def ask_to_llm(prompt: str) -> str:
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run()
