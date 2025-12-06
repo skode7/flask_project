@@ -15,7 +15,7 @@ async function fetchData (input) {
 }
 
 async function showMessage(message) {
-    console.log(message)
+    span.className = "message"
     if ("reply" in message) {
         span.textContent = message["reply"]
     }
@@ -26,9 +26,17 @@ async function showMessage(message) {
 }
 
 submitBtn.addEventListener("click", async (evt) => {
-    const inputValue = document.getElementById("txtarea").value;
-    const data = await fetchData(inputValue)
+    let userInput = document.getElementById("txtarea");
+    const value = userInput.value;
+    const msgSpan = document.createElement("span")
+
+    userInput.value = "";
+    msgSpan.className = "message user"
+    msgSpan.textContent = value;
+    msgDiv.append(msgSpan)
     evt.preventDefault()
+
+    const data = await fetchData(value);
     await showMessage(data)
 
 })
