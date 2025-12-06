@@ -1,6 +1,6 @@
 # Mentor AI 
 
-Mentor AI toimii mentorina ja opettajana eikä anna suoraa oikeaa vastausta.  
+Mentor AI toimii mentorina ja opettajana.  
 Se on full-stack demo, jossa frontend + backend + LLM on integroitu.
 
 ## Endpoint http://127.0.0.1:5000/
